@@ -1,0 +1,43 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PakStream - Access</title>
+  <style>
+    body{height:100vh;margin:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#071024,#021022);font-family:Arial;color:#fff}
+    .box{width:360px;padding:28px;border-radius:12px;background:rgba(255,255,255,0.03);box-shadow:0 10px 30px rgba(0,0,0,0.5);text-align:center}
+    input{width:100%;padding:12px;margin:10px 0;border-radius:8px;border:1px solid rgba(255,255,255,0.08);background:transparent;color:#fff}
+    button{padding:12px 18px;border-radius:8px;border:none;cursor:pointer;background:linear-gradient(90deg,#5ee7df,#6a82fb);color:#000;font-weight:700}
+    p{opacity:0.9}
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>PakStream</h2>
+    <p>Enter your access code</p>
+    <input id="code" placeholder="Enter code">
+    <button id="btn">Login</button>
+    <p id="msg"></p>
+    <p style="font-size:12px;margin-top:12px;opacity:0.7">Admin? Open <code>/admin.html</code></p>
+  </div>
+  <script>
+    document.getElementById('btn').addEventListener('click', async ()=>{
+      const code = document.getElementById('code').value.trim();
+      if(!code){ document.getElementById('msg').innerText='Please enter code'; return; }
+      document.getElementById('msg').innerText='Checking...';
+      try {
+        const r = await fetch('/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ code })});
+        const d = await r.json();
+        document.getElementById('msg').innerText = d.message || (d.success ? 'Access granted' : 'Access denied');
+        if(d.success) {
+          // redirect to a placeholder dashboard (you can replace)
+          window.location.href = '/dashboard.html';
+        }
+      } catch(e){
+        document.getElementById('msg').innerText = 'Server error';
+      }
+    });
+  </script>
+</body>
+</html>

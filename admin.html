@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>PakStream - Admin</title>
+  <style>
+    body{font-family:Arial;background:#f4f6fb;padding:30px}
+    .card{max-width:600px;margin:20px auto;padding:20px;background:#fff;border-radius:8px;box-shadow:0 4px 18px rgba(0,0,0,0.08)}
+    input,textarea{width:100%;padding:10px;margin:8px 0;border:1px solid #ddd;border-radius:6px}
+    button{padding:10px 14px;border-radius:6px;border:none;background:#2563eb;color:#fff;cursor:pointer}
+    pre{background:#f7f9ff;padding:10px;border-radius:6px}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>PakStream — Admin Panel</h2>
+    <div id="loginBox">
+      <input id="admKey" placeholder="Admin key">
+      <button id="loginBtn">Login</button>
+      <p id="loginMsg"></p>
+    </div>
+
+    <div id="panel" style="display:none">
+      <h3>Access Codes</h3>
+      <textarea id="codes" rows="6" placeholder="one code per line"></textarea>
+      <br>
+      <button id="saveBtn">Save Codes</button>
+      <p id="saveMsg"></p>
+      <h4>Current raw file (data/keys.json)</h4>
+      <pre id="rawbox"></pre>
+    </div>
+  </div>
+
+  <script>
+    let admKey='';
+    document.getElementById('loginBtn').addEventListener('click', async ()=>{
+      admKey = document.getElementById('admKey').value.trim();
+      if(!admKey){ document.getElementById('loginMsg').innerText='Enter admin key'; return; }
+      document.getElementById('loginMsg').innerText='Checking...';
+      try {
+        const r = await fetch('/admin/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ adminKey: admKey })});
+        const d = await r.json();
+        if(d.success){
+          document.getElementById('loginBox').style.display='none';
+          document.getElementById('panel').style.display='block';
+          document.getElementById('codes').value = (d.accessCodes || []).join('\n');
+          document.getElementById('rawbox').innerText = JSON.stringify({ adminKey: admKey, accessCodes: d.accessCodes }, null, 2);
+        } else {
+          document.getElementById('loginMsg').innerText = d.message || 'Auth failed';
+        }
+      } catch(e){
+        document.getElementById('loginMsg').innerText = 'Server error';
+      }
+    });
+
+    document.getElementById('saveBtn').addEventListener('click', async ()=>{
+      const lines = document.getElementById('codes').value.split('\n').map(s=>s.trim()).filter(Boolean);
+      document.getElementById('saveMsg').innerText='Saving...';
+      try {
+        const r = await fetch('/admin/update', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ adminKey: admKey, newCodes: lines })});
+        const d = await r.json();
+        document.getElementById('saveMsg').innerText = d.message || (d.success ? 'Saved' : 'Error');
+        if(d.success){
+          document.getElementById('rawbox').innerText = JSON.stringify({ adminKey: admKey, accessCodes: lines }, null, 2);
+        }
+      } catch(e){
+        document.getElementById('saveMsg').innerText = 'Server error';
+      }
+    });
+  </script>
+</body>
+</html>
