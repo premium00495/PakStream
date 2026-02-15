@@ -1,7 +1,4 @@
 {
-  "adminKey": "pakstream-admin-CHANGE",
-  "accessCodes": [
-    "12345",
-    "pak2025"
-  ]
+  "adminKey": "123456",
+  "codes": ["12345", "99999", "abcde"]
 }
