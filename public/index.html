@@ -19,7 +19,7 @@
     <input id="code" placeholder="Enter code">
     <button id="btn">Login</button>
     <p id="msg"></p>
-    <p style="font-size:12px;margin-top:12px;opacity:0.7">Admin? Open <code>/admin.html</code></p>
+    <p style="font-size:12px;margin-top:12px;opacity:0.7">Admin? Open <code>../admin.html</code></p>
   </div>
   <script>
     document.getElementById('btn').addEventListener('click', async ()=>{
@@ -35,7 +35,7 @@
     const d = await r.json();
     document.getElementById('msg').innerText = d.message || (d.success ? 'Access granted' : 'Access denied');
     if(d.success) {
-      window.location.href = '/dashboard.html';
+      window.location.href = '../dashboard.html';
     }
   } catch(e){
     document.getElementById('msg').innerText = 'Server error';
