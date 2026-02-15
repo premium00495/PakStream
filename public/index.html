@@ -23,21 +23,21 @@
   </div>
   <script>
     document.getElementById('btn').addEventListener('click', async ()=>{
-      const code = document.getElementById('code').value.trim();
-      if(!code){ document.getElementById('msg').innerText='Please enter code'; return; }
-      document.getElementById('msg').innerText='Checking...';
-      try {
-        const r = await fetch('/login', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ code })});
-        const d = await r.json();
-        document.getElementById('msg').innerText = d.message || (d.success ? 'Access granted' : 'Access denied');
-        if(d.success) {
-          // redirect to a placeholder dashboard (you can replace)
-          window.location.href = '/dashboard.html';
-        }
-      } catch(e){
-        document.getElementById('msg').innerText = 'Server error';
-      }
+  const code = document.getElementById('code').value.trim();
+  if(!code){ document.getElementById('msg').innerText='Please enter code'; return; }
+  document.getElementById('msg').innerText='Checking...';
+  try {
+    const r = await fetch('/api/login', { 
+      method:'POST', 
+      headers:{'Content-Type':'application/json'}, 
+      body: JSON.stringify({ code })
     });
-  </script>
-</body>
-</html>
+    const d = await r.json();
+    document.getElementById('msg').innerText = d.message || (d.success ? 'Access granted' : 'Access denied');
+    if(d.success) {
+      window.location.href = '/dashboard.html';
+    }
+  } catch(e){
+    document.getElementById('msg').innerText = 'Server error';
+  }
+});
