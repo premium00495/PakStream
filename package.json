@@ -1,17 +1,5 @@
 {
-  "name": "pakstream-access",
+  "name": "pakstream",
   "version": "1.0.0",
-  "main": "../api/login.js",
-  "scripts": {
-    "start": "node login.js",
-    "dev": "nodemon login.js"
-  },
-  "dependencies": {
-    "express": "^4.19.2",
-    "cors": "^2.8.5",
-    "body-parser": "^1.20.2"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.22"
-  }
+  "private": true
 }
