@@ -1,6 +1,6 @@
 module.exports = (req, res) => {
   try {
-    const codes = ["12345", "99999", "abcde"]; // hardcoded test codes
+    const codes = ["12345", "99999", "abcde"];
 
     let body = "";
 
